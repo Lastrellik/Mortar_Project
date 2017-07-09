@@ -1,8 +1,9 @@
 abstract class StationaryObject {
 
   float verticalAngle = 0;
-  float horizontalAngle = 90;
+  float horizontalAngle = 0;
   float rotationalSensitivity = .5;
+  boolean rotateClockwise = false, rotateCounterClockwise = false, rotateUp = false, rotateDown = false;
   int posX, posY, posZ;
 
   public void setRotationSensitivity(float sensitivity) {
@@ -14,22 +15,22 @@ abstract class StationaryObject {
     return rotationalSensitivity;
   }
 
-  public void increaseVerticalAngle() {
+  private void increaseVerticalAngle() {
     if (verticalAngle < 90) verticalAngle += rotationalSensitivity;
   }
 
-  public void descreaseVerticalAngle() {
+  private void decreaseVerticalAngle() {
     if (verticalAngle > 0) verticalAngle -= rotationalSensitivity;
   }
 
-  public void increaseHorizontalAngle() {
+  private void increaseHorizontalAngle() {
     if (horizontalAngle < 180) horizontalAngle += rotationalSensitivity;
   }
 
-  public void decreaseHorizontalAngle() {
-    if (horizontalAngle > 0) verticalAngle -= rotationalSensitivity;
+  private void decreaseHorizontalAngle() {
+    if (horizontalAngle > 0) horizontalAngle -= rotationalSensitivity;
   }
-  
+
   public void setVerticalAngle(float angle) {
     this.verticalAngle = angle;
   }
@@ -68,5 +69,44 @@ abstract class StationaryObject {
 
   public int getPosZ() {
     return posZ;
+  }
+
+  public void setRotateClockwise(boolean rotateClockwise) {
+    this.rotateClockwise = rotateClockwise;
+  }
+
+  public void setRotateCounterClockwise(boolean rotateCounterClockwise) {
+    this.rotateCounterClockwise = rotateCounterClockwise;
+  }
+
+  public void setRotateUp(boolean rotateUp) {
+    this.rotateUp = rotateUp;
+  }
+
+  public void setRotateDown(boolean rotateDown) {
+    this.rotateDown = rotateDown;
+  }
+
+  public boolean getRotateClockwise() {
+    return rotateClockwise;
+  }
+
+  public boolean getRotateCounterClockwise() {
+    return rotateCounterClockwise;
+  }
+
+  public boolean getRotateUp() {
+    return rotateUp;
+  }
+
+  public boolean getRotateDown() {
+    return rotateDown;
+  }
+
+  public void update() {
+    if (rotateClockwise) this.decreaseHorizontalAngle();
+    if (rotateCounterClockwise) this.increaseHorizontalAngle();
+    if (rotateUp) this.increaseVerticalAngle();
+    if (rotateDown) this.decreaseVerticalAngle();
   }
 }

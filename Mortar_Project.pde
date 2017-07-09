@@ -2,23 +2,7 @@ import peasy.*;
 
 int floorWidth = 400;
 int floorLength = 800;
-
-
-int baseWidth = 8;
-int baseLength = 15;
-int baseHeight = 2;
-int baseX = 0;
-int baseY = baseLength / 2;
-int baseZ = baseHeight / 2;
-float cannonHorizontalAngle = 90;
-boolean decreaseHorizontalAngle = false;
-boolean increaseHorizontalAngle = false;
-
-float cannonLength = 12;
-float cannonVerticalAngle = 0;
-boolean decreaseVerticalAngle = false;
-boolean increaseVerticalAngle = false;
-float angleSensitivity = .5;
+Cannon cannon;
 
 boolean projectileFired = false;
 PVector projectilePositionVector;
@@ -29,16 +13,16 @@ float projectileVelocity = 10;
 PVector gravity = new PVector(0, 0, -.25);
 
 PeasyCam cam;
-int camLookAtX = 100;
+int camLookAtX = 0;
 int camLookAtY = -50;
 int camLookAtZ = -1 * floorLength / 2;
-
 
 void setup() {
   size(1920, 1080, P3D);
   smooth();
-  cam = new PeasyCam(this, camLookAtX, camLookAtY, camLookAtZ, 500);
+  cam = new PeasyCam(this, camLookAtX, camLookAtY, camLookAtZ, 350);
   cam.setYawRotationMode();
+  cannon = new Cannon();
 }
 
 void draw() {
@@ -46,16 +30,28 @@ void draw() {
   setPerspective();
   cam.lookAt(camLookAtX, camLookAtY, 0);
   drawFloor();
-  drawBase();
-  drawCannon(10, 1, cannonLength);
-  updateCannon();
-  updateProjectile();
+  fill(0);
+  pushMatrix();
+  translate(0, 0, 100);
+  sphere(10);
+  translate(0, 100, -100);
+  fill(255);
+  sphere(5);
+  translate(100, -100, 0);
+  fill(155);
+  sphere(3);
+  popMatrix();
+  cannon.drawCannon();
+  //updateProjectile();
   drawHUD();
 }
 
 void setPerspective() {
   scale(1, -1);
   rotateX(-PI/2);
+  /*rotateX(PI/2);
+  rotateZ(PI);
+  rotateY(PI);*/
 }
 
 void drawFloor() {
@@ -64,87 +60,36 @@ void drawFloor() {
   rect(-floorWidth / 2, 0, floorWidth, floorLength);
 }
 
-void drawBase() {
-  noStroke();
-  fill(182, 155, 76);
-  pushMatrix();
-  rotateZ(radians(cannonHorizontalAngle - 90));
-  translate(baseX, baseY, baseZ);
-  box(baseWidth, baseLength, baseHeight);
-  popMatrix();
-}
-
-void drawCannon(int sides, float radius, float length) {
-  fill(255);
-  pushMatrix();
-  translate(0, 0, baseHeight * 2);
-  rotateZ(radians(cannonHorizontalAngle - 90));
-  rotateX(radians(cannonVerticalAngle - 90));
-  float angle = 360 / sides, circleX, circleY;
-  beginShape();
-  for (int i = 0; i < sides; i++) {
-    circleX = cos(radians( i * angle)) * radius;
-    circleY = sin(radians(i*angle)) * radius;
-    vertex(circleX, circleY, 0);
-  }
-  endShape(CLOSE);
-
-  beginShape();
-  for (int i = 0; i < sides; i++) {
-    circleX = cos(radians( i * angle)) * radius;
-    circleY = sin(radians(i*angle)) * radius;
-    vertex(circleX, circleY, length);
-  }
-  endShape(CLOSE);
-
-  beginShape(TRIANGLE_STRIP);
-  for (int i = 0; i < sides + 1; i++) {
-    circleX = cos(radians(i * angle)) * radius;
-    circleY = sin(radians(i * angle)) * radius;
-    vertex(circleX, circleY, length);
-    vertex(circleX, circleY, 0);
-  }
-  endShape(CLOSE);
-  popMatrix();
-}
-
 void keyPressed() {
   if (key == CODED) {
     if (keyCode == LEFT) {
-      increaseHorizontalAngle = true;
+      cannon.rotateCounterClockwise(true);
     } else if (keyCode == RIGHT) {
-      decreaseHorizontalAngle = true;
+      cannon.rotateClockwise(true);
     } else if (keyCode == UP) {
-      increaseVerticalAngle = true;
+      cannon.increaseBarrelAngle(true);
     } else if (keyCode == DOWN) {
-      decreaseVerticalAngle = true;
+      cannon.decreaseBarrelAngle(true);
     }
-  } else if (key == ' ') {
-    fire();
-  }
+  } //else if (key == ' ') {
+   // fire();
+ // }
 }
 
 void keyReleased() {
   if (key == CODED) {
     if (keyCode == LEFT) {
-      increaseHorizontalAngle = false;
+      cannon.rotateCounterClockwise(false);
     } else if (keyCode == RIGHT) {
-      decreaseHorizontalAngle = false;
+      cannon.rotateClockwise(false);
     } else if (keyCode == UP) {
-      increaseVerticalAngle = false;
+      cannon.increaseBarrelAngle(false);
     } else if (keyCode == DOWN) {
-      decreaseVerticalAngle = false;
+      cannon.decreaseBarrelAngle(false);
     }
   }
 }
-
-void updateCannon() {
-  if (increaseHorizontalAngle && cannonHorizontalAngle < 180) cannonHorizontalAngle += angleSensitivity;
-  if (decreaseHorizontalAngle && cannonHorizontalAngle > 0) cannonHorizontalAngle -= angleSensitivity;
-  if (increaseVerticalAngle && cannonVerticalAngle < 90) cannonVerticalAngle += angleSensitivity;
-  if (decreaseVerticalAngle && cannonVerticalAngle > 0) cannonVerticalAngle -= angleSensitivity;
-}
-
+/*
 void fire() {
   projectilePositionVector = new PVector(cos(radians(cannonHorizontalAngle)) * Math.abs(cos(radians(cannonVerticalAngle))), sin(radians(cannonHorizontalAngle)) * cos(radians(cannonVerticalAngle)), sin(radians(cannonVerticalAngle)));
   projectileVelocityVector = new PVector(projectilePositionVector.x, projectilePositionVector.y, projectilePositionVector.z);
@@ -168,11 +113,11 @@ void updateProjectile() {
     sphere(projectileRadius);
     popMatrix();
   }
-}
+}*/
 
 void drawHUD() {
   cam.beginHUD();
   textSize(15);
-  text("my text", 10, 20);
+  text(cannon.getBarrel().getVerticalAngle() + " " + cannon.getBase().getHorizontalAngle(), 10, 20);
   cam.endHUD();
 }

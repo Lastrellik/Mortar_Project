@@ -1,6 +1,6 @@
 class Cannon extends StationaryObject{
-  Barrel barrel;
-  Base base;
+  Barrel barrel = new Barrel();
+  Base base = new Base();
   int posX, posY, posZ;
 
   public Cannon() {
@@ -14,8 +14,10 @@ class Cannon extends StationaryObject{
 
   public void drawCannon() {
     pushMatrix();
-    rotateZ(radians(horizontalAngle - 90));
+    base.update();
     base.drawBase();
+    translate(0, 0, base.getHeight() + barrel.getRadius());
+    barrel.update();
     barrel.drawBarrel();
     popMatrix();
   }
@@ -36,22 +38,22 @@ class Cannon extends StationaryObject{
     return base;
   }
 
-  public void rotateCounterClockwise(){
-    barrel.increaseHorizontalAngle();
-    base.increaseHorizontalAngle();
+  public void rotateCounterClockwise(boolean rotateCounterClockwise){
+    barrel.setRotateCounterClockwise(rotateCounterClockwise);
+    base.setRotateCounterClockwise(rotateCounterClockwise);
   }
   
-  public void rotateClockwise() {
-    barrel.decreaseHorizontalAngle();
-    base.increaseHorizontalAngle();
+  public void rotateClockwise(boolean rotateClockwise) {
+    barrel.setRotateClockwise(rotateClockwise);
+    base.setRotateClockwise(rotateClockwise);
   }
   
-  public void increaseBarrelAngle(){
-     barrel.increaseHorizontalAngle();
+  public void increaseBarrelAngle(boolean increaseBarrelAngle){
+    barrel.setRotateUp(increaseBarrelAngle);
   }
   
-  public void decreaseBarrelAngle(){
-    barrel.decreaseHorizontalAngle(); 
+  public void decreaseBarrelAngle(boolean decreaseBarrelAngle){
+    barrel.setRotateDown(decreaseBarrelAngle);
   }
 
 }
