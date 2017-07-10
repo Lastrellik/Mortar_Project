@@ -2,22 +2,25 @@ class Base extends StationaryObject{
   int length = 12;
   int width = 6;
   int height = 2;
-
-  public Base() {
+  
+  public Base(){
+    
   }
 
   public Base(int length, int width, int height) {
-    this();
     setLength(length);
     setWidth(width);
     setHeight(height);
   }
 
   public void drawBase() {
+    int currentFill = g.fillColor;
+    fill(colorR, colorG, colorB);
     pushMatrix();
     translate(getLength() / 2, 0, getHeight() / 2);
     box(length, width, height);
     popMatrix();
+    fill(currentFill);
   }
 
   public void setLength(int length) {

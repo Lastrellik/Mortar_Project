@@ -30,7 +30,6 @@ class Cannon extends StationaryObject {
   private void drawProjectiles() {
       for (Projectile p : projectiles) {
       pushMatrix();
-     // if(p.isFired()) translate(endOfCannonX, endOfCannonY, endOfCannonZ);
       p.updateProjectile();
       popMatrix();
     }
@@ -72,5 +71,17 @@ class Cannon extends StationaryObject {
 
   public void decreaseBarrelAngle(boolean decreaseBarrelAngle) {
     barrel.setRotateDown(decreaseBarrelAngle);
+  }
+  
+  public void setBaseColor(int colorR, int colorG, int colorB){
+    base.setColor(colorR, colorG, colorB); 
+  }
+  
+  public void setBarrelColor(int colorR, int colorG, int colorB){
+    barrel.setColor(colorR, colorG, colorB); 
+  }
+  
+  public void setProjectileColor(int colorR, int colorG, int colorB){
+    if(projectiles.size() > 0) projectiles.get(projectiles.size() - 1).setColor(colorR, colorG, colorB); 
   }
 }

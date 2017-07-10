@@ -2,11 +2,14 @@ class Projectile {
   private boolean projectileFired = false;
   private PVector positionVector;
   private PVector velocityVector;
-  private PVector gravity = new PVector(0, 0, -.25);
-  private float radius = 1;
-  private float velocity = 12;
+  private PVector gravity = new PVector(0, 0, -.326);
+  private float radius = 10;
+  private float velocity = 65.33;
   private Cannon cannon;
   private Barrel barrel;
+  int colorR = 70;
+  int colorG = 102;
+  int colorB = 255;
 
 
   public Projectile(Cannon cannon) {
@@ -22,28 +25,32 @@ class Projectile {
   }
 
   public void updateProjectile() {
+    int currentFill = g.fillColor;
+    fill(colorR, colorG, colorB);
     if (projectileFired) {
-      if (positionVector.z > 0) {
+      if (positionVector.z > -cannon.getBase().getHeight()) {
         positionVector.add(velocityVector);
         velocityVector.add(gravity);
       }
-      if (positionVector.z < 0) {
+      if (positionVector.z < -cannon.getBase().getHeight()) {
         accountForLandingBelowGround();
+        //velocityVector.z *= -.9;
       }
       pushMatrix();
       translate(positionVector.x, positionVector.y, cannon.getBase().getHeight() + radius + positionVector.z);
       sphere(radius);
       popMatrix();
     }
+    fill(currentFill);
   }
 
   private void accountForLandingBelowGround() {
     velocityVector.mult(-.1); 
-    while (positionVector.z < 0) {
+    while (positionVector.z < -cannon.getBase().getHeight()) {
       positionVector.add(velocityVector);
       println(positionVector.z);
     }
-    positionVector.z = 0;
+    positionVector.z = -cannon.getBase().getHeight();
   }
 
   public void setRadius(float radius) {
@@ -71,5 +78,12 @@ class Projectile {
   public void setBarrel(Barrel barrel) {
     if (barrel == null) throw new NullPointerException();
     this.barrel =  barrel;
+  }
+
+  public void setColor(int colorR, int colorG, int colorB) {
+    if (colorR > 255 || colorR < 0 || colorG > 255 || colorG < 0 || colorB > 255 || colorB < 0) throw new IllegalArgumentException();
+    this.colorR = colorR;
+    this.colorG = colorG;
+    this.colorB = colorB;
   }
 }

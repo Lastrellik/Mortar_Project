@@ -1,23 +1,21 @@
 import peasy.*;
 
-int floorWidth = 400;
+int floorWidth = 1000;
 int floorLength = 800;
 Cannon cannon;
-
-
-
 
 PeasyCam cam;
 int camLookAtX = 0;
 int camLookAtY = -50;
-int camLookAtZ = 0;
+int camLookAtZ = -1 * floorLength / 2;
 
 void setup() {
   size(1920, 1080, P3D);
   smooth();
-  cam = new PeasyCam(this, camLookAtX, camLookAtY, camLookAtZ, 50);
+  cam = new PeasyCam(this, camLookAtX, camLookAtY, camLookAtZ, 500);
   cam.setYawRotationMode();
   cannon = new Cannon();
+  cannon.setBaseColor(182, 155, 76);
   sphereDetail(10);
 }
 
@@ -28,6 +26,7 @@ void draw() {
   drawFloor();
   fill(0);
   cannon.drawCannon();
+  cannon.setProjectileColor(70, 102, 255);
   drawHUD();
 }
 
@@ -74,7 +73,8 @@ void keyReleased() {
 
 void drawHUD() {
   cam.beginHUD();
+  fill(57, 255, 20);
   textSize(15);
-  text(cannon.getBarrel().getVerticalAngle() + " " + cannon.getHorizontalAngle(), 10, 20);
+  text("Vertical Angle: "+ " " + cannon.getBarrel().getVerticalAngle() + " Horizontal Angle: " + cannon.getHorizontalAngle(), 10, 20);
   cam.endHUD();
 }

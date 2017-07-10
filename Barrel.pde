@@ -2,7 +2,6 @@ class Barrel extends StationaryObject{
   int sides = 10;
   float radius = 1;
   float length = 12;
-
   public Barrel() {
   }
 
@@ -15,6 +14,8 @@ class Barrel extends StationaryObject{
 
   public void drawBarrel() {
     pushMatrix();
+    int previousFillColor = g.fillColor;
+    fill(colorR, colorG, colorB);
     rotateY(radians(-verticalAngle + 90));
     float angle = 360 / sides, circleX, circleY;
     beginShape();
@@ -41,6 +42,7 @@ class Barrel extends StationaryObject{
       vertex(circleX, circleY, 0);
     }
     endShape(CLOSE);
+    fill(previousFillColor);
     popMatrix();
   }
 
