@@ -15,7 +15,6 @@ class Barrel extends StationaryObject{
 
   public void drawBarrel() {
     pushMatrix();
-    rotateZ(radians(horizontalAngle));
     rotateY(radians(-verticalAngle + 90));
     float angle = 360 / sides, circleX, circleY;
     beginShape();

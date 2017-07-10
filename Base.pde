@@ -15,7 +15,6 @@ class Base extends StationaryObject{
 
   public void drawBase() {
     pushMatrix();
-    rotateZ(radians(horizontalAngle));
     translate(getLength() / 2, 0, getHeight() / 2);
     box(length, width, height);
     popMatrix();
