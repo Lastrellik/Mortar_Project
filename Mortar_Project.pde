@@ -72,6 +72,11 @@ void keyReleased() {
   }
 }
 
+void mouseClicked(){
+  println("MouseX: " + mouseX + " MouseY: " + mouseY);
+  cannon.addTarget(new Target(mouseX, mouseY));
+}
+
 void drawHUD() {
   cam.beginHUD();
   fill(57, 255, 20);

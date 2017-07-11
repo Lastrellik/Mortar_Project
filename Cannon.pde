@@ -2,10 +2,12 @@ class Cannon extends StationaryObject {
   Barrel barrel = new Barrel();
   Base base = new Base();
   ArrayList<Projectile> projectiles;
+  ArrayList<Target> targets;
   int posX, posY, posZ;
 
   public Cannon() {
     projectiles = new ArrayList<Projectile>();
+    targets = new ArrayList<Target>();
   }
 
   public Cannon (Barrel barrel, Base base) {
@@ -25,6 +27,7 @@ class Cannon extends StationaryObject {
     barrel.drawBarrel();
     popMatrix();
     drawProjectiles();
+    drawTargets();
   }
 
   private void drawProjectiles() {
@@ -34,11 +37,21 @@ class Cannon extends StationaryObject {
       popMatrix();
     }
   }
+  
+  private void drawTargets(){
+    for(Target t : targets){
+      t.drawTarget(); 
+    }
+  }
 
   public void fire() {
     Projectile projectile = new Projectile(cannon);
     projectile.fire();
     projectiles.add(projectile);
+  }
+
+  public void addTarget(Target target){
+    targets.add(target); 
   }
 
   public void setBarrel(Barrel barrel) {
