@@ -51,7 +51,6 @@ class Projectile {
     velocityVector.mult(-.1); 
     while (positionVector.z < -cannon.getBase().getHeight()) {
       positionVector.add(velocityVector);
-      println(positionVector.z);
     }
     positionVector.z = -cannon.getBase().getHeight();
   }

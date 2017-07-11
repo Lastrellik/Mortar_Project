@@ -1,10 +1,9 @@
-class Base extends StationaryObject{
+class Base extends StationaryObject {
   int length = 12;
   int width = 6;
   int height = 2;
-  
-  public Base(){
-    
+
+  public Base() {
   }
 
   public Base(int length, int width, int height) {

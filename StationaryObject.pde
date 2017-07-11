@@ -105,12 +105,12 @@ abstract class StationaryObject {
   public boolean getRotateDown() {
     return rotateDown;
   }
-  
-  public void setColor(int colorR, int colorG, int colorB){
-    if(colorR > 255 || colorR < 0 || colorG > 255 || colorG < 0 || colorB > 255 || colorB < 0) throw new IllegalArgumentException();
-   this.colorR = colorR;
-   this.colorG = colorG;
-   this.colorB = colorB;
+
+  public void setColor(int colorR, int colorG, int colorB) {
+    if (colorR > 255 || colorR < 0 || colorG > 255 || colorG < 0 || colorB > 255 || colorB < 0) throw new IllegalArgumentException();
+    this.colorR = colorR;
+    this.colorG = colorG;
+    this.colorB = colorB;
   }
 
   public void update() {

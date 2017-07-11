@@ -1,4 +1,4 @@
-class Barrel extends StationaryObject{
+class Barrel extends StationaryObject {
   int sides = 10;
   float radius = 1;
   float length = 12;

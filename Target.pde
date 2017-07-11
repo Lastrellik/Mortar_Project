@@ -22,15 +22,19 @@ class Target {
   public int getPosZ() {
     return posZ;
   }
-  
-  public void setSize(int size){
-   this.size = size; 
+
+  public void setSize(int size) {
+    this.size = size;
   }
-  
-  public void drawTarget(){
+
+  public int getSize() {
+    return this.size;
+  }
+
+  public void drawTarget() {
     pushMatrix();
     fill(255, 0, 0);
-    translate(posX, posY, posZ + size);
+    translate(posX, posY, size);
     box(size, size, size);
     popMatrix();
   }
