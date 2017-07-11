@@ -20,13 +20,14 @@ void setup() {
 }
 
 void draw() {
-  background(100);
+  background(0);
   setPerspective();
   cam.lookAt(camLookAtX, camLookAtY, camLookAtZ);
   drawFloor();
   fill(0);
-  cannon.drawCannon();
+  cannon.drawCannon();;
   cannon.setProjectileColor(70, 102, 255);
+  //cannon.setProjectileColor((int)random(0, 255), (int)random(0, 255), (int)random(0,255));
   drawHUD();
 }
 
@@ -75,6 +76,7 @@ void drawHUD() {
   cam.beginHUD();
   fill(57, 255, 20);
   textSize(15);
-  text("Vertical Angle: "+ " " + cannon.getBarrel().getVerticalAngle() + " Horizontal Angle: " + cannon.getHorizontalAngle(), 10, 20);
+  text("Vertical Angle: "+ " " + cannon.getBarrel().getVerticalAngle() + " Horizontal Angle: " + cannon.getHorizontalAngle() + 
+    "\nFramerate: " + frameRate, 10, 20);
   cam.endHUD();
 }

@@ -2,7 +2,7 @@ abstract class StationaryObject {
 
   float verticalAngle = 0;
   float horizontalAngle = 90;
-  float rotationalSensitivity = .5;
+  float rotationalSensitivity = 1;
   boolean rotateClockwise = false, rotateCounterClockwise = false, rotateUp = false, rotateDown = false;
   int posX, posY, posZ;
   int colorR = 255;
