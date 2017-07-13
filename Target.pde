@@ -1,6 +1,7 @@
 class Target implements Comparable<Target> {
   private int posX, posY, posZ, size = 5;
   private double distanceToCannon = 0;
+  private MiniMapTarget miniMapTarget;
 
   public Target(int posX, int posY) {
     this(posX, posY, 0);
@@ -49,6 +50,13 @@ class Target implements Comparable<Target> {
     return distanceToCannon; 
   }
   
+  public void setMiniMapTarget(MiniMapTarget target){
+     this.miniMapTarget = target;
+  }
+  
+  public MiniMapTarget getMiniMapTarget(){
+    return this.miniMapTarget; 
+  }
   public int compareTo(Target other){
     return (int)Math.round(this.getDistanceToCannon() - other.getDistanceToCannon()); 
   }

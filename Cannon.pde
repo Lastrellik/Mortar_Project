@@ -24,14 +24,23 @@ class Cannon extends StationaryObject {
     pushMatrix();
     rotateZ(radians(getHorizontalAngle()));
     this.update();
-    base.update();
-    base.drawBase();
+    drawBase();
     translate(0, 0, base.getHeight() + barrel.getRadius());
-    barrel.update();
-    barrel.drawBarrel();
+    drawBarrel();
     popMatrix();
     drawProjectiles();
     drawTargets();
+  }
+  
+  private void drawBase(){
+    base.update();
+    base.drawBase();
+  }
+  
+  private void drawBarrel(){
+    barrel.update();
+    barrel.drawBarrel();
+     
   }
 
   private void drawProjectiles() {
@@ -60,10 +69,9 @@ class Cannon extends StationaryObject {
     Target currentTarget = targets.peek(); 
     double horizontalAngle = Math.atan((float)currentTarget.getPosY() / (float)currentTarget.getPosX());
     if(horizontalAngle < 0) horizontalAngle += PI;
-    double verticalAngle = Math.atan((float)((currentTarget.getDistanceToCannon() - 12) * gravityInCM) / (float)(Math.pow(CENTIMETERS_PER_METER * getVelocity(), 2)) * 2.0);
+    double verticalAngle = Math.atan((float)((currentTarget.getDistanceToCannon()) * gravityInCM) / (float)(Math.pow(CENTIMETERS_PER_METER * getVelocity(), 2)) * 2.0);
     setHorizontalAngle(degrees((float)horizontalAngle));
     barrel.setVerticalAngle(degrees((float)verticalAngle));
-    println(degrees((float)verticalAngle));
     fire();
     targets.poll();
   }
@@ -87,6 +95,10 @@ class Cannon extends StationaryObject {
 
   public Base getBase() {
     return base;
+  }
+  
+  public PriorityQueue<Target> getTargets(){
+    return targets; 
   }
   
   public void setVelocity(double velocity) {

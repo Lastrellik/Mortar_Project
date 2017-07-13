@@ -3,7 +3,6 @@ import java.awt.Rectangle;
 class MiniMap {
   private int posX, posY, miniMapWidth, miniMapLength;
   private int margin = 10;
-  private ArrayList<Rectangle> miniMapTargets;
   private Terrain terrain;
   private Cannon cannon;
 
@@ -14,7 +13,6 @@ class MiniMap {
     this.miniMapWidth = terrain.getWidth() / 4;
     this.posX = width - miniMapWidth - margin;
     this.posY = margin;
-    miniMapTargets = new ArrayList<Rectangle>();
   }
 
   public void drawMiniMap() {
@@ -27,11 +25,9 @@ class MiniMap {
   }
 
   private void drawPoints() {
-    for (Rectangle r : miniMapTargets) {
-      int fillColor = g.fillColor;
-      fill(255, 0, 0);
-      rect((float)r.getX(), (float)r.getY(), (float)r.getWidth(), (float)r.getHeight()); 
-      fill(fillColor);
+    if(cannon.getTargets() == null) return;
+    for (Target t : cannon.getTargets()) {
+      t.getMiniMapTarget().drawMiniMapTarget();
     }
   }
 
@@ -39,8 +35,10 @@ class MiniMap {
     if (containsPoint(x, y)) {
       int terrainTargetXPos = (((x - posX) * terrain.getWidth()) / miniMapWidth) - (terrain.getWidth() / 2);
       int terrainTargetYPos = terrain.getLength() - ((y - posY) * terrain.getLength()) / miniMapLength;
-      miniMapTargets.add(new Rectangle(x, y, 5, 5));
-      cannon.addTarget(new Target(terrainTargetXPos, terrainTargetYPos));
+      Target currentTarget = new Target(terrainTargetXPos, terrainTargetYPos);
+      MiniMapTarget miniMapTarget = new MiniMapTarget(x, y);
+      currentTarget.setMiniMapTarget(miniMapTarget);
+      cannon.addTarget(currentTarget);
     }
   }
 
