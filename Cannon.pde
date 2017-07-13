@@ -1,13 +1,17 @@
+import java.util.PriorityQueue;
+
 class Cannon extends StationaryObject {
-  Barrel barrel = new Barrel();
-  Base base = new Base();
-  ArrayList<Projectile> projectiles;
-  ArrayList<Target> targets;
-  int posX, posY, posZ;
+  private Barrel barrel = new Barrel();
+  private Base base = new Base();
+  private ArrayList<Projectile> projectiles;
+  private PriorityQueue<Target> targets;
+  private double velocity = 0;//16.666666667; //10 meters per second default
+  private final float gravityInCM = 981;
+  private final int CENTIMETERS_PER_METER = 100;
 
   public Cannon() {
     projectiles = new ArrayList<Projectile>();
-    targets = new ArrayList<Target>();
+    targets = new PriorityQueue<Target>();
   }
 
   public Cannon (Barrel barrel, Base base) {
@@ -18,7 +22,7 @@ class Cannon extends StationaryObject {
 
   public void drawCannon() {
     pushMatrix();
-    rotateZ(radians(horizontalAngle));
+    rotateZ(radians(getHorizontalAngle()));
     this.update();
     base.update();
     base.drawBase();
@@ -50,8 +54,22 @@ class Cannon extends StationaryObject {
     projectile.fire();
     projectiles.add(projectile);
   }
+  
+  public void autoFireOne(){
+    if(targets.peek() == null) return;
+    Target currentTarget = targets.peek(); 
+    double horizontalAngle = Math.atan((float)currentTarget.getPosY() / (float)currentTarget.getPosX());
+    if(horizontalAngle < 0) horizontalAngle += PI;
+    double verticalAngle = Math.atan((float)((currentTarget.getDistanceToCannon() - 12) * gravityInCM) / (float)(Math.pow(CENTIMETERS_PER_METER * getVelocity(), 2)) * 2.0);
+    setHorizontalAngle(degrees((float)horizontalAngle));
+    barrel.setVerticalAngle(degrees((float)verticalAngle));
+    println(degrees((float)verticalAngle));
+    fire();
+    targets.poll();
+  }
 
   public void addTarget(Target target) {
+    target.setDistanceToCannon(Math.sqrt(Math.pow(target.getPosX(), 2) + Math.pow(target.getPosY(), 2)));
     targets.add(target);
   }
 
@@ -69,6 +87,15 @@ class Cannon extends StationaryObject {
 
   public Base getBase() {
     return base;
+  }
+  
+  public void setVelocity(double velocity) {
+    if (velocity < 0) throw new IllegalArgumentException();
+    this.velocity = velocity;
+  }
+
+  public double getVelocity() {
+    return velocity;
   }
 
   public void rotateCounterClockwise(boolean rotateCounterClockwise) {

@@ -1,10 +1,10 @@
 abstract class StationaryObject {
 
-  float verticalAngle = 0;
-  float horizontalAngle = 90;
-  float rotationalSensitivity = 1;
-  boolean rotateClockwise = false, rotateCounterClockwise = false, rotateUp = false, rotateDown = false;
-  int posX, posY, posZ;
+  private float verticalAngle = 0;
+  private float horizontalAngle = 90;
+  private float rotationalSensitivity = 1;
+  private boolean rotateClockwise = false, rotateCounterClockwise = false, rotateUp = false, rotateDown = false;
+  private int posX, posY, posZ;
   int colorR = 255;
   int colorG = 255;
   int colorB = 255;

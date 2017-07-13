@@ -1,5 +1,6 @@
-class Target {
+class Target implements Comparable<Target> {
   private int posX, posY, posZ, size = 5;
+  private double distanceToCannon = 0;
 
   public Target(int posX, int posY) {
     this(posX, posY, 0);
@@ -37,5 +38,18 @@ class Target {
     translate(posX, posY, size);
     box(size, size, size);
     popMatrix();
+  }
+  
+  public void setDistanceToCannon(double distanceToCannon){
+    if(distanceToCannon < 0) throw new IllegalArgumentException();
+    this.distanceToCannon = distanceToCannon;
+  }
+  
+  public double getDistanceToCannon(){
+    return distanceToCannon; 
+  }
+  
+  public int compareTo(Target other){
+    return (int)Math.round(this.getDistanceToCannon() - other.getDistanceToCannon()); 
   }
 }

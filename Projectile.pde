@@ -2,12 +2,10 @@ class Projectile {
   private boolean projectileFired = false;
   private PVector positionVector;
   private PVector velocityVector;
-  private final PVector gravity = new PVector(0, 0, -.27222222222);//DO NOT CHANGE THIS! REMEMBER SECONDS SQUARED
+  private final PVector GRAVITY = new PVector(0, 0, -.27222222222);//DO NOT CHANGE THIS! REMEMBER SECONDS SQUARED
   private float radius = 1;
-  private float velocity = 16.666666667;
   private Cannon cannon;
   private Barrel barrel;
-  private final int CENTIMETERS_PER_METER = 100;
   int colorR = 70;
   int colorG = 102;
   int colorB = 255;
@@ -21,9 +19,8 @@ class Projectile {
   public void fire() {
     positionVector = new PVector(cos(radians(cannon.getHorizontalAngle())) * Math.abs(cos(radians(barrel.getVerticalAngle()))), sin(radians(cannon.getHorizontalAngle())) * cos(radians(barrel.getVerticalAngle())), sin(radians(barrel.getVerticalAngle())));
     positionVector.normalize();
-    println(positionVector.mag());
     velocityVector = new PVector(positionVector.x, positionVector.y, positionVector.z);
-    velocityVector.mult(velocity);
+    velocityVector.mult((float)cannon.getVelocity());
     projectileFired = true;
   }
 
@@ -33,7 +30,7 @@ class Projectile {
     if (projectileFired) {
       if (positionVector.z > -cannon.getBase().getHeight()) {
         positionVector.add(velocityVector);
-        velocityVector.add(gravity);
+        velocityVector.add(GRAVITY);
       }
       if (positionVector.z < -cannon.getBase().getHeight()) {
         accountForLandingBelowGround();
@@ -62,15 +59,6 @@ class Projectile {
 
   public float getRadius() {
     return radius;
-  }
-
-  public void setVelocity(float velocity) {
-    if (velocity < 0) throw new IllegalArgumentException();
-    this.velocity = (velocity * CENTIMETERS_PER_METER) / frameRate;
-  }
-
-  public float getVelocity() {
-    return (velocity * frameRate) / CENTIMETERS_PER_METER;
   }
 
   public boolean isFired() {
