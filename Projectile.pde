@@ -3,7 +3,7 @@ class Projectile {
   private PVector positionVector;
   private PVector velocityVector;
   private final PVector GRAVITY = new PVector(0, 0, -.27222222222);//DO NOT CHANGE THIS! REMEMBER SECONDS SQUARED
-  private float radius = 10;
+  private float radius = 1;
   private Cannon cannon;
   private Barrel barrel;
   int colorR = 70;
@@ -21,6 +21,7 @@ class Projectile {
     positionVector.normalize();
     velocityVector = new PVector(positionVector.x, positionVector.y, positionVector.z);
     velocityVector.mult((float)cannon.getVelocity_cmPerFrame());
+    println(velocityVector.mag());
     projectileFired = true;
   }
 

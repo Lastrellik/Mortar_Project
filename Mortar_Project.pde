@@ -21,7 +21,7 @@ void setup() {
   cannon.setBaseColor(182, 155, 76);
   cannon.setBarrelColor(255, 255, 255);
   cannon.setProjectileColor(70, 102, 255);
-  cannon.setVelocity_metersPerSecond(38.2);
+  cannon.setVelocity_metersPerSecond(10);
   miniMap = new MiniMap(terrain, cannon);
   sphereDetail(10);
 }
@@ -53,8 +53,8 @@ void keyPressed() {
       cannon.decreaseBarrelAngle(true);
     }
   } else if (key == ' ') {
-    cannon.fire();
-    //cannon.autoFireOne();
+    //cannon.fire();
+    cannon.autoFireOne();
   }
 }
 
