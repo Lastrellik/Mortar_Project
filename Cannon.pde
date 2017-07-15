@@ -5,9 +5,10 @@ class Cannon extends StationaryObject {
   private Base base = new Base();
   private ArrayList<Projectile> projectiles;
   private PriorityQueue<Target> targets;
-  private double velocity = 0;//16.666666667; //10 meters per second default
-  private final float gravityInCM = 981;
+  private double velocityCMPerFrame = 16.666666667; //10 meters per second default
+  private final float gravityInCM = -981;
   private final int CENTIMETERS_PER_METER = 100;
+  private final int FRAME_RATE = 60;
 
   public Cannon() {
     projectiles = new ArrayList<Projectile>();
@@ -31,16 +32,15 @@ class Cannon extends StationaryObject {
     drawProjectiles();
     drawTargets();
   }
-  
-  private void drawBase(){
+
+  private void drawBase() {
     base.update();
     base.drawBase();
   }
-  
-  private void drawBarrel(){
+
+  private void drawBarrel() {
     barrel.update();
     barrel.drawBarrel();
-     
   }
 
   private void drawProjectiles() {
@@ -63,13 +63,21 @@ class Cannon extends StationaryObject {
     projectile.fire();
     projectiles.add(projectile);
   }
-  
-  public void autoFireOne(){
-    if(targets.peek() == null) return;
+
+  public void autoFireOne() {
+    if (targets.peek() == null) return;
     Target currentTarget = targets.peek(); 
+    double distance = currentTarget.getDistanceToCannon();
+    int cannonHeight = cannon.getBase().getHeight();
+    double firstTermInFormula = (-Math.pow(velocityCMPerFrame, 2)) / (double)(gravityInCM * distance);
+    println("first term in formula: " + firstTermInFormula);
+    double secondTermInFormula = Math.pow(velocityCMPerFrame, 4)/(double)(Math.pow(gravityInCM, 2) * Math.pow(distance, 2));
+    println("second term in formula: " + secondTermInFormula);
+    double thirdTermInFormula = (2 * cannonHeight * Math.pow(velocityCMPerFrame, 2))/(double)(gravityInCM * Math.pow(distance, 2));
+    println("third term in formula: " + thirdTermInFormula);
     double horizontalAngle = Math.atan((float)currentTarget.getPosY() / (float)currentTarget.getPosX());
-    if(horizontalAngle < 0) horizontalAngle += PI;
-    double verticalAngle = Math.atan((float)((currentTarget.getDistanceToCannon()) * gravityInCM) / (float)(Math.pow(CENTIMETERS_PER_METER * getVelocity(), 2)) * 2.0);
+    if (horizontalAngle < 0) horizontalAngle += PI;
+    double verticalAngle = Math.atan(firstTermInFormula + Math.sqrt(secondTermInFormula - thirdTermInFormula - 1)); 
     setHorizontalAngle(degrees((float)horizontalAngle));
     barrel.setVerticalAngle(degrees((float)verticalAngle));
     fire();
@@ -96,18 +104,36 @@ class Cannon extends StationaryObject {
   public Base getBase() {
     return base;
   }
-  
-  public PriorityQueue<Target> getTargets(){
-    return targets; 
-  }
-  
-  public void setVelocity(double velocity) {
-    if (velocity < 0) throw new IllegalArgumentException();
-    this.velocity = velocity;
+
+  public PriorityQueue<Target> getTargets() {
+    return targets;
   }
 
-  public double getVelocity() {
-    return velocity;
+  public void setVelocity_cmPerSecond(double velocity) {
+    if (velocity < 0) throw new IllegalArgumentException();
+    this.velocityCMPerFrame = velocity / FRAME_RATE;
+  }
+
+  public void setVelocity_metersPerSecond(double velocity) {
+    if (velocity < 0) throw new IllegalArgumentException();
+    this.velocityCMPerFrame = (velocity * CENTIMETERS_PER_METER) / 60;
+  }
+  
+  public void setVelocity_cmPerFrame(double velocity){
+    if (velocity < 0) throw new IllegalArgumentException();
+     this.velocityCMPerFrame = velocity; 
+  }
+
+  public double getVelocity_cmPerSecond() {
+    return velocityCMPerFrame * FRAME_RATE;
+  }
+  
+  public double getVelocity_metersPerSecond(){
+    return FRAME_RATE * CENTIMETERS_PER_METER * velocityCMPerFrame;
+  }
+  
+  public double getVelocity_cmPerFrame(){
+    return velocityCMPerFrame; 
   }
 
   public void rotateCounterClockwise(boolean rotateCounterClockwise) {

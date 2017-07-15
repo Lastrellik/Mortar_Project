@@ -12,7 +12,7 @@ int camLookAtY = -50;
 int camLookAtZ = -1 * floorLength / 2;
 
 void setup() {
-  size(1920, 1080, P3D);
+  size(1000, 750, P3D);
   smooth();
   cam = new PeasyCam(this, camLookAtX, camLookAtY, camLookAtZ, 650);
   cam.setYawRotationMode();
@@ -20,7 +20,8 @@ void setup() {
   terrain = new Terrain(floorLength, floorWidth);
   cannon.setBaseColor(182, 155, 76);
   cannon.setBarrelColor(255, 255, 255);
-  cannon.setVelocity(20);
+  cannon.setProjectileColor(70, 102, 255);
+  cannon.setVelocity_metersPerSecond(38.2);
   miniMap = new MiniMap(terrain, cannon);
   sphereDetail(10);
 }
@@ -29,9 +30,7 @@ void draw() {
   background(0);
   setPerspective();
   cam.lookAt(camLookAtX, camLookAtY, camLookAtZ);
-  fill(0);
   cannon.drawCannon();
-  cannon.setProjectileColor(70, 102, 255);
   terrain.drawTerrain();
   //cannon.setProjectileColor((int)random(0, 255), (int)random(0, 255), (int)random(0,255));
   drawHUD();
@@ -54,8 +53,8 @@ void keyPressed() {
       cannon.decreaseBarrelAngle(true);
     }
   } else if (key == ' ') {
-    //cannon.fire();
-    cannon.autoFireOne();
+    cannon.fire();
+    //cannon.autoFireOne();
   }
 }
 
