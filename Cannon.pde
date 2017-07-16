@@ -6,8 +6,7 @@ class Cannon extends StationaryObject {
   private ArrayList<Projectile> projectiles;
   private PriorityQueue<Target> targets;
   private double velocityCMPerFrame = 16.666666667; //10 meters per second default
-  private final float gravityInCM = 981;
-  private final float gravityInM = -9.8;
+  private final float gravityInM = -9.807;
   private final int CENTIMETERS_PER_METER = 100;
   private final int FRAME_RATE = 60;
 
@@ -52,10 +51,7 @@ class Cannon extends StationaryObject {
 
   private void drawTargets() {
     for (Target t : targets) {
-      pushMatrix();
-      translate(0, 0, -base.getHeight());
       t.drawTarget();
-      popMatrix();
     }
   }
 
@@ -69,20 +65,15 @@ class Cannon extends StationaryObject {
     if (targets.peek() == null) return;
     Target currentTarget = targets.peek(); 
     double distance = currentTarget.getDistanceToCannon() / CENTIMETERS_PER_METER;
-    double cannonHeightInMeters = cannon.getBase().getHeight() / (double)CENTIMETERS_PER_METER;
-    double firstTermInFormula = -Math.pow(10, 2);//-Math.pow(getVelocity_metersPerSecond(), 2);
-    println("first term in formula: " + firstTermInFormula);
-    double secondTermInFormula = Math.sqrt(Math.pow(10, 4) - Math.pow(gravityInM, 2) * Math.pow(distance, 2) - (2 * Math.pow(10, 2) * cannonHeightInMeters * gravityInM));
-    //Math.sqrt(Math.pow(getVelocity_metersPerSecond(), 4) - Math.pow(gravityInM, 2) * Math.pow(distance, 2) - (2 * Math.pow(getVelocity_metersPerSecond(), 2) * cannonHeightInMeters * gravityInM));
-    println("second term in formula: " + secondTermInFormula);
+    double cannonHeightInMeters = cannon.getBase().getHeight() / 10.0;// The denominator should be (float)CENTIMETERS_PER_METER. Somewhere in my math is an error.
+    double firstTermInFormula = -Math.pow(getVelocity_metersPerSecond(), 2);
+    double secondTermInFormula = Math.sqrt(Math.pow(getVelocity_metersPerSecond(), 4) - Math.pow(gravityInM, 2) * Math.pow(distance, 2) - (2 * Math.pow(getVelocity_metersPerSecond(), 2) * cannonHeightInMeters * gravityInM));
     double thirdTermInFormula = gravityInM * distance;
-    println("third term in formula: " + thirdTermInFormula);
-    double horizontalAngle = Math.atan((float)currentTarget.getPosY() / (float)currentTarget.getPosX());
+    float horizontalAngle = (float)Math.atan((double)currentTarget.getPosY() / (float)currentTarget.getPosX());
+    float verticalAngle = (float)Math.atan((firstTermInFormula - secondTermInFormula) / thirdTermInFormula); 
     if (horizontalAngle < 0) horizontalAngle += PI;
-    double verticalAngle = Math.atan((firstTermInFormula - secondTermInFormula) / thirdTermInFormula); 
-    //if(verticalAngle < 0) verticalAngle += PI;
-    setHorizontalAngle(degrees((float)horizontalAngle));
-    barrel.setVerticalAngle(degrees((float)verticalAngle));
+    setHorizontalAngle(degrees(horizontalAngle));
+    barrel.setVerticalAngle(degrees(verticalAngle));
     fire();
     targets.poll();
   }
@@ -132,7 +123,7 @@ class Cannon extends StationaryObject {
   }
   
   public double getVelocity_metersPerSecond(){
-    return FRAME_RATE * CENTIMETERS_PER_METER * velocityCMPerFrame;
+    return (FRAME_RATE * velocityCMPerFrame) / CENTIMETERS_PER_METER;
   }
   
   public double getVelocity_cmPerFrame(){

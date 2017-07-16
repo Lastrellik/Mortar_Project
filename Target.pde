@@ -36,8 +36,10 @@ class Target implements Comparable<Target> {
   public void drawTarget() {
     pushMatrix();
     fill(255, 0, 0);
-    translate(posX, posY, size);
-    box(size, size, size);
+    stroke(255);
+    translate(posX, posY, size / 2.0);
+    box(size);
+    noStroke();
     popMatrix();
   }
   

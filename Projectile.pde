@@ -21,7 +21,6 @@ class Projectile {
     positionVector.normalize();
     velocityVector = new PVector(positionVector.x, positionVector.y, positionVector.z);
     velocityVector.mult((float)cannon.getVelocity_cmPerFrame());
-    println(velocityVector.mag());
     projectileFired = true;
   }
 
@@ -38,7 +37,7 @@ class Projectile {
         //velocityVector.z *= -.9;
       }
       pushMatrix();
-      translate(positionVector.x, positionVector.y, cannon.getBase().getHeight() + radius + positionVector.z);
+      translate(positionVector.x, positionVector.y, cannon.getBase().getHeight() + positionVector.z);
       sphere(radius);
       popMatrix();
     }
