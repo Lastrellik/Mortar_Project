@@ -3,9 +3,11 @@ class Projectile {
   private PVector positionVector;
   private PVector velocityVector;
   private final PVector GRAVITY = new PVector(0, 0, -.27222222222);//DO NOT CHANGE THIS! REMEMBER SECONDS SQUARED
-  private float radius = 1;
   private Cannon cannon;
   private Barrel barrel;
+  private float radius;
+  private float posX, posY, posZ;
+  private float projectileInitialHeight;
   int colorR = 70;
   int colorG = 102;
   int colorB = 255;
@@ -14,6 +16,8 @@ class Projectile {
   public Projectile(Cannon cannon) {
     this.cannon = cannon;
     this.barrel = cannon.getBarrel();
+    this.radius = barrel.getRadius();
+    this.projectileInitialHeight = cannon.getBase().getHeight();
   }
 
   public void fire() {
@@ -25,31 +29,38 @@ class Projectile {
   }
 
   public void updateProjectile() {
-    int currentFill = g.fillColor;
-    fill(colorR, colorG, colorB);
     if (projectileFired) {
-      if (positionVector.z > -cannon.getBase().getHeight()) {
+      if (positionVector.z > -projectileInitialHeight) {
         positionVector.add(velocityVector);
         velocityVector.add(GRAVITY);
       }
-      if (positionVector.z < -cannon.getBase().getHeight()) {
+      if (positionVector.z < -projectileInitialHeight) {
         accountForLandingBelowGround();
         //velocityVector.z *= -.9;
       }
-      pushMatrix();
-      translate(positionVector.x, positionVector.y, cannon.getBase().getHeight() + positionVector.z);
-      sphere(radius);
-      popMatrix();
     }
-    fill(currentFill);
   }
 
   private void accountForLandingBelowGround() {
     velocityVector.mult(-.1); 
-    while (positionVector.z < -cannon.getBase().getHeight()) {
+    while (positionVector.z < -projectileInitialHeight) {
       positionVector.add(velocityVector);
+      println(positionVector.z);
     }
-    positionVector.z = -cannon.getBase().getHeight();
+    positionVector.z = -projectileInitialHeight;
+  }
+
+  public void drawProjectile() {
+    int currentFill = g.fillColor;
+    fill(colorR, colorG, colorB);
+    posX = positionVector.x;
+    posY = positionVector.y;
+    posZ = cannon.getBase().getHeight() + radius + positionVector.z;
+    pushMatrix();
+    translate(posX, posY, posZ);
+    sphere(radius);
+    popMatrix();
+    fill(currentFill);
   }
 
   public void setRadius(float radius) {
@@ -68,6 +79,18 @@ class Projectile {
   public void setBarrel(Barrel barrel) {
     if (barrel == null) throw new NullPointerException();
     this.barrel =  barrel;
+  }
+
+  public float getPosX() {
+    return posX;
+  }
+
+  public float getPosY() {
+    return posY;
+  }
+
+  public float getPosZ() {
+    return posZ;
   }
 
   public void setColor(int colorR, int colorG, int colorB) {

@@ -1,4 +1,4 @@
-import java.util.PriorityQueue;
+import java.util.*;
 
 class Cannon extends StationaryObject {
   private Barrel barrel = new Barrel();
@@ -46,13 +46,19 @@ class Cannon extends StationaryObject {
   private void drawProjectiles() {
     for (Projectile p : projectiles) {
       p.updateProjectile();
+      p.drawProjectile();
     }
   }
 
   private void drawTargets() {
+    Queue<Target> hitTargets = new LinkedList<Target>();
     for (Target t : targets) {
       t.drawTarget();
+      for (Projectile p : projectiles){
+        if(t.containsProjectile(p)) hitTargets.add(t); 
+      }
     }
+    for(Target t : hitTargets) targets.remove(t);
   }
 
   public void fire() {
@@ -75,7 +81,6 @@ class Cannon extends StationaryObject {
     setHorizontalAngle(degrees(horizontalAngle));
     barrel.setVerticalAngle(degrees(verticalAngle));
     fire();
-    targets.poll();
   }
 
   public void addTarget(Target target) {

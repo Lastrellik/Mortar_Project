@@ -1,9 +1,10 @@
 import peasy.*;
 
 int floorWidth = 1500;
-int floorLength = 1080;
+int floorLength = 845;
 Cannon cannon;
 Terrain terrain;
+int projectileVelocity = 10;
 
 PeasyCam cam;
 MiniMap miniMap;
@@ -12,16 +13,16 @@ int camLookAtY = -50;
 int camLookAtZ = -1 * floorLength / 2;
 
 void setup() {
-  size(1500, 750, P3D);
+  size(1500, 845, P3D);
   smooth();
   cam = new PeasyCam(this, camLookAtX, camLookAtY, camLookAtZ, 650);
-  //cam.setYawRotationMode();
+  cam.setYawRotationMode();
   cannon = new Cannon();
   terrain = new Terrain(floorLength, floorWidth);
   cannon.setBaseColor(182, 155, 76);
   cannon.setBarrelColor(255, 255, 255);
   cannon.setProjectileColor(70, 102, 255);
-  cannon.setVelocity_metersPerSecond(10);
+  cannon.setVelocity_metersPerSecond(projectileVelocity);
   miniMap = new MiniMap(terrain, cannon);
   sphereDetail(10);
 }
@@ -29,7 +30,7 @@ void setup() {
 void draw() {
   background(0);
   setPerspective();
-  //cam.lookAt(camLookAtX, camLookAtY, camLookAtZ);
+  cam.lookAt(camLookAtX, camLookAtY, camLookAtZ);
   cannon.drawCannon();
   terrain.drawTerrain();
   cannon.setProjectileColor((int)random(0, 255), (int)random(0, 255), (int)random(0,255));

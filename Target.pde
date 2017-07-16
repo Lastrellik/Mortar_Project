@@ -59,6 +59,15 @@ class Target implements Comparable<Target> {
   public MiniMapTarget getMiniMapTarget(){
     return this.miniMapTarget; 
   }
+  
+  public boolean containsProjectile(Projectile projectile){
+    float leftSide = posX - size/2.0;
+    float rightSide = posX + size/2.0;
+    float frontSide = posY - size/2.0;
+    float backSide = posY + size/2.0;
+     return !(projectile.getPosZ() > size || projectile.getPosX() < leftSide || projectile.getPosX() > rightSide || projectile.getPosY() < frontSide || projectile.getPosY() > backSide); 
+  }
+  
   public int compareTo(Target other){
     return (int)Math.round(this.getDistanceToCannon() - other.getDistanceToCannon()); 
   }
