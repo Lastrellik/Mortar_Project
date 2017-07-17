@@ -35,7 +35,7 @@ class Projectile {
         positionVector.add(velocityVector);
         velocityVector.add(GRAVITY);
       }
-      if(bounce && positionVector.z > -10) {
+      if(bounce && positionVector.z > -100) {
         positionVector.add(velocityVector);
         velocityVector.add(GRAVITY);
       }
