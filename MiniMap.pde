@@ -4,10 +4,8 @@ class MiniMap {
   private int posX, posY, miniMapWidth, miniMapLength;
   private int margin = 10;
   private Terrain terrain;
-  private Cannon cannon;
 
-  public MiniMap(Terrain terrain, Cannon cannon) {
-    this.cannon = cannon;
+  public MiniMap(Terrain terrain) {
     this.terrain = terrain;
     this.miniMapLength = terrain.getLength() / 4;
     this.miniMapWidth = terrain.getWidth() / 4;
@@ -25,8 +23,8 @@ class MiniMap {
   }
 
   private void drawPoints() {
-    if(cannon.getTargets() == null) return;
-    for (Target t : cannon.getTargets()) {
+    if(terrain.getTargets() == null) return;
+    for (Target t : terrain.getTargets()) {
       t.getMiniMapTarget().drawMiniMapTarget();
     }
   }
@@ -38,7 +36,7 @@ class MiniMap {
       Target currentTarget = new Target(terrainTargetXPos, terrainTargetYPos);
       MiniMapTarget miniMapTarget = new MiniMapTarget(x, y);
       currentTarget.setMiniMapTarget(miniMapTarget);
-      cannon.addTarget(currentTarget);
+      terrain.addTarget(currentTarget);
     }
   }
 

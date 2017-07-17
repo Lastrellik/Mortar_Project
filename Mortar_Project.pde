@@ -1,10 +1,10 @@
 import peasy.*;
 
-int floorWidth = 1500;
-int floorLength = 845;
+int floorWidth = 845;
+int floorLength = 1500;
 Cannon cannon;
 Terrain terrain;
-int projectileVelocity = 10;
+double projectileVelocity = 20;
 
 PeasyCam cam;
 MiniMap miniMap;
@@ -15,7 +15,7 @@ int camLookAtZ = -1 * floorLength / 2;
 void setup() {
   size(1500, 845, P3D);
   smooth();
-  cam = new PeasyCam(this, camLookAtX, camLookAtY, camLookAtZ, 650);
+  cam = new PeasyCam(this, camLookAtX, camLookAtY, camLookAtZ, 850);
   cam.setYawRotationMode();
   cannon = new Cannon();
   terrain = new Terrain(floorLength, floorWidth);
@@ -23,7 +23,10 @@ void setup() {
   cannon.setBarrelColor(255, 255, 255);
   cannon.setProjectileColor(70, 102, 255);
   cannon.setVelocity_metersPerSecond(projectileVelocity);
-  miniMap = new MiniMap(terrain, cannon);
+  cannon.getBarrel().setRadius(2);
+  cannon.getBarrel().setRotationSensitivity(.5);
+  cannon.setRotationSensitivity(.5);
+  miniMap = new MiniMap(terrain);
   sphereDetail(10);
 }
 
@@ -33,7 +36,7 @@ void draw() {
   cam.lookAt(camLookAtX, camLookAtY, camLookAtZ);
   cannon.drawCannon();
   terrain.drawTerrain();
-  cannon.setProjectileColor((int)random(0, 255), (int)random(0, 255), (int)random(0,255));
+  //cannon.setProjectileColor((int)random(0, 255), (int)random(0, 255), (int)random(0,255));
   drawHUD();
 }
 
@@ -77,15 +80,15 @@ void keyReleased() {
 void mouseClicked() {
   if (miniMap.containsPoint(mouseX, mouseY)) {
     miniMap.markTarget(mouseX, mouseY);
+    cannon.updateTargets();
   }
 }
 
 void drawHUD() {
   cam.beginHUD();
   fill(57, 255, 20);
-  textSize(15);
-  text("Vertical Angle: "+ " " + cannon.getBarrel().getVerticalAngle() + " Horizontal Angle: " + cannon.getHorizontalAngle() + 
-    "\nFramerate: " + frameRate, 10, 20);
+  textSize(20);
+  text("Vertical Angle: "+ " " + cannon.getBarrel().getVerticalAngle() + " Horizontal Angle: " + cannon.getHorizontalAngle(), 10, 20);
   miniMap.drawMiniMap();
   cam.endHUD();
 }

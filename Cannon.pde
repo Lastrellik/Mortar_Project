@@ -4,15 +4,15 @@ class Cannon extends StationaryObject {
   private Barrel barrel = new Barrel();
   private Base base = new Base();
   private ArrayList<Projectile> projectiles;
-  private PriorityQueue<Target> targets;
   private double velocityCMPerFrame = 16.666666667; //10 meters per second default
   private final float gravityInM = -9.807;
   private final int CENTIMETERS_PER_METER = 100;
   private final int FRAME_RATE = 60;
+  private Target[] targets;
+  private int targetIterator = 0;
 
   public Cannon() {
     projectiles = new ArrayList<Projectile>();
-    targets = new PriorityQueue<Target>();
   }
 
   public Cannon (Barrel barrel, Base base) {
@@ -30,7 +30,6 @@ class Cannon extends StationaryObject {
     drawBarrel();
     popMatrix();
     drawProjectiles();
-    drawTargets();
   }
 
   private void drawBase() {
@@ -44,21 +43,13 @@ class Cannon extends StationaryObject {
   }
 
   private void drawProjectiles() {
+    Queue<Target> hitTargets = new LinkedList<Target>();
     for (Projectile p : projectiles) {
       p.updateProjectile();
       p.drawProjectile();
+      for(Target t : terrain.getTargets()) if(t.containsProjectile(p)) hitTargets.add(t);
     }
-  }
-
-  private void drawTargets() {
-    Queue<Target> hitTargets = new LinkedList<Target>();
-    for (Target t : targets) {
-      t.drawTarget();
-      for (Projectile p : projectiles){
-        if(t.containsProjectile(p)) hitTargets.add(t); 
-      }
-    }
-    for(Target t : hitTargets) targets.remove(t);
+    for(Target t : hitTargets) terrain.getTargets().remove(t);
   }
 
   public void fire() {
@@ -68,8 +59,8 @@ class Cannon extends StationaryObject {
   }
 
   public void autoFireOne() {
-    if (targets.peek() == null) return;
-    Target currentTarget = targets.peek(); 
+    if (targets == null || targets.length == 0 || targetIterator >= targets.length) return;
+    Target currentTarget = targets[targetIterator++]; 
     double distance = currentTarget.getDistanceToCannon() / CENTIMETERS_PER_METER;
     double cannonHeightInMeters = cannon.getBase().getHeight() / 10.0;// The denominator should be (float)CENTIMETERS_PER_METER. Somewhere in my math is an error.
     double firstTermInFormula = -Math.pow(getVelocity_metersPerSecond(), 2);
@@ -83,9 +74,12 @@ class Cannon extends StationaryObject {
     fire();
   }
 
-  public void addTarget(Target target) {
-    target.setDistanceToCannon(Math.sqrt(Math.pow(target.getPosX(), 2) + Math.pow(target.getPosY(), 2)));
-    targets.add(target);
+  public void updateTargets(){
+    targets = new Target[terrain.getTargets().size()];
+    targets = terrain.getTargets().toArray(targets); 
+    Arrays.sort(targets);
+    targetIterator = 0;
+    println("updated iterator");
   }
 
   public void setBarrel(Barrel barrel) {
@@ -102,10 +96,6 @@ class Cannon extends StationaryObject {
 
   public Base getBase() {
     return base;
-  }
-
-  public PriorityQueue<Target> getTargets() {
-    return targets;
   }
 
   public void setVelocity_cmPerSecond(double velocity) {

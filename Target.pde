@@ -1,5 +1,5 @@
 class Target implements Comparable<Target> {
-  private int posX, posY, posZ, size = 5;
+  private int posX, posY, posZ, size = 10;
   private double distanceToCannon = 0;
   private MiniMapTarget miniMapTarget;
 
