@@ -8,6 +8,7 @@ class Projectile {
   private float radius;
   private float posX, posY, posZ;
   private float projectileInitialHeight;
+  private boolean bounce = true;
   int colorR = 70;
   int colorG = 102;
   int colorB = 255;
@@ -21,7 +22,7 @@ class Projectile {
   }
 
   public void fire() {
-    positionVector = new PVector(cos(radians(cannon.getHorizontalAngle())) * Math.abs(cos(radians(barrel.getVerticalAngle()))), sin(radians(cannon.getHorizontalAngle())) * cos(radians(barrel.getVerticalAngle())), sin(radians(barrel.getVerticalAngle())));
+    positionVector = new PVector(cos(radians((float)cannon.getHorizontalAngle())) * Math.abs(cos(radians((float)barrel.getVerticalAngle()))), sin(radians((float)cannon.getHorizontalAngle())) * cos(radians((float)barrel.getVerticalAngle())), sin(radians((float)barrel.getVerticalAngle())));
     positionVector.normalize();
     velocityVector = new PVector(positionVector.x, positionVector.y, positionVector.z);
     velocityVector.mult((float)cannon.getVelocity_cmPerFrame());
@@ -30,13 +31,17 @@ class Projectile {
 
   public void updateProjectile() {
     if (projectileFired) {
-      if (positionVector.z > -projectileInitialHeight) {
+      if (!bounce && positionVector.z > -projectileInitialHeight) {
+        positionVector.add(velocityVector);
+        velocityVector.add(GRAVITY);
+      }
+      if(bounce && positionVector.z > -10) {
         positionVector.add(velocityVector);
         velocityVector.add(GRAVITY);
       }
       if (positionVector.z < -projectileInitialHeight) {
-        accountForLandingBelowGround();
-        //velocityVector.z *= -.9;
+        if(bounce) velocityVector.z *= -.9;
+        else accountForLandingBelowGround();
       }
     }
   }
@@ -45,7 +50,6 @@ class Projectile {
     velocityVector.mult(-.1); 
     while (positionVector.z < -projectileInitialHeight) {
       positionVector.add(velocityVector);
-      println(positionVector.z);
     }
     positionVector.z = -projectileInitialHeight;
   }
@@ -61,6 +65,14 @@ class Projectile {
     sphere(radius);
     popMatrix();
     fill(currentFill);
+  }
+
+  public void setBounce(boolean bounce){
+    this.bounce = bounce; 
+  }
+  
+  public boolean getBounce(){
+    return this.bounce; 
   }
 
   public void setRadius(float radius) {

@@ -10,7 +10,9 @@ class Cannon extends StationaryObject {
   private final int FRAME_RATE = 60;
   private Target[] targets;
   private int targetIterator = 0;
-
+  private boolean rapidFire = false;
+  private boolean bounce = false;
+  
   public Cannon() {
     projectiles = new ArrayList<Projectile>();
   }
@@ -23,11 +25,12 @@ class Cannon extends StationaryObject {
 
   public void drawCannon() {
     pushMatrix();
-    rotateZ(radians(getHorizontalAngle()));
+    rotateZ(radians((float)getHorizontalAngle()));
     this.update();
     drawBase();
     translate(0, 0, base.getHeight() + barrel.getRadius());
     drawBarrel();
+    if(rapidFire && frameCount % 5 == 0) fire();
     popMatrix();
     drawProjectiles();
   }
@@ -54,13 +57,14 @@ class Cannon extends StationaryObject {
 
   public void fire() {
     Projectile projectile = new Projectile(cannon);
+    projectile.setBounce(bounce);
     projectile.fire();
     projectiles.add(projectile);
   }
 
   public void autoFireOne() {
     if (targets == null || targets.length == 0 || targetIterator >= targets.length) return;
-    Target currentTarget = targets[targetIterator++]; 
+    Target currentTarget = targets[targetIterator]; 
     double distance = currentTarget.getDistanceToCannon() / CENTIMETERS_PER_METER;
     double cannonHeightInMeters = cannon.getBase().getHeight() / 10.0;// The denominator should be (float)CENTIMETERS_PER_METER. Somewhere in my math is an error.
     double firstTermInFormula = -Math.pow(getVelocity_metersPerSecond(), 2);
@@ -69,6 +73,8 @@ class Cannon extends StationaryObject {
     float horizontalAngle = (float)Math.atan((double)currentTarget.getPosY() / (float)currentTarget.getPosX());
     float verticalAngle = (float)Math.atan((firstTermInFormula - secondTermInFormula) / thirdTermInFormula); 
     if (horizontalAngle < 0) horizontalAngle += PI;
+    if(Float.isNaN(verticalAngle)) return;
+    targetIterator++;
     setHorizontalAngle(degrees(horizontalAngle));
     barrel.setVerticalAngle(degrees(verticalAngle));
     fire();
@@ -79,7 +85,26 @@ class Cannon extends StationaryObject {
     targets = terrain.getTargets().toArray(targets); 
     Arrays.sort(targets);
     targetIterator = 0;
-    println("updated iterator");
+  }
+  
+  public void clearProjectiles(){
+    projectiles.clear(); 
+  }
+
+  public void clearTargets(){
+    targets = null; 
+  }
+  
+  public void setBounce(boolean bounce){
+    this.bounce = bounce; 
+  }
+  
+  public boolean getBounce(){
+    return this.bounce; 
+  }
+  
+  public void setRapidFire(boolean rapidFire){
+    this.rapidFire = rapidFire;
   }
 
   public void setBarrel(Barrel barrel) {
@@ -104,7 +129,7 @@ class Cannon extends StationaryObject {
   }
 
   public void setVelocity_metersPerSecond(double velocity) {
-    if (velocity < 0) throw new IllegalArgumentException();
+    if (velocity < 0) return;
     this.velocityCMPerFrame = (velocity * CENTIMETERS_PER_METER) / 60;
   }
   

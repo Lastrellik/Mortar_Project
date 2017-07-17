@@ -1,10 +1,11 @@
 import peasy.*;
 
-int floorWidth = 845;
+int floorWidth = 1500;
 int floorLength = 1500;
 Cannon cannon;
 Terrain terrain;
 double projectileVelocity = 20;
+boolean randomProjectileColor = false;
 
 PeasyCam cam;
 MiniMap miniMap;
@@ -36,7 +37,7 @@ void draw() {
   cam.lookAt(camLookAtX, camLookAtY, camLookAtZ);
   cannon.drawCannon();
   terrain.drawTerrain();
-  //cannon.setProjectileColor((int)random(0, 255), (int)random(0, 255), (int)random(0,255));
+  if(randomProjectileColor) cannon.setProjectileColor((int)random(0, 255), (int)random(0, 255), (int)random(0,255));
   drawHUD();
 }
 
@@ -60,6 +61,30 @@ void keyPressed() {
     cannon.fire();
   } else if (key == 'a'){
     cannon.autoFireOne(); 
+  } else if (key == 'r'){
+    randomProjectileColor = !randomProjectileColor; 
+  } else if (key == 'w'){
+    cannon.setVelocity_metersPerSecond(cannon.getVelocity_metersPerSecond() + 1); 
+  } else if (key == 's'){
+    cannon.setVelocity_metersPerSecond(cannon.getVelocity_metersPerSecond() - 1); 
+  } else if (key == 'e'){
+    cannon.getBarrel().setRadius(cannon.getBarrel().getRadius() + .1); 
+  } else if (key == 'd'){
+    cannon.getBarrel().setRadius(cannon.getBarrel().getRadius() - .1); 
+  } else if (key == 't') {
+    cannon.setRotationSensitivity(cannon.getRotationSensitivity() + .1); 
+    cannon.getBarrel().setRotationSensitivity(cannon.getRotationSensitivity() + .1);
+  } else if (key == 'g') {
+    cannon.setRotationSensitivity(cannon.getRotationSensitivity() - .1); 
+    cannon.getBarrel().setRotationSensitivity(cannon.getRotationSensitivity() - .1);
+  } else if (key == 'c') {
+    cannon.clearProjectiles();
+    cannon.clearTargets();
+    terrain.clearTargets();
+  } else if (key == 'm') {
+    cannon.setRapidFire(true); 
+  } else if (key == 'b') {
+    cannon.setBounce(!cannon.getBounce()); 
   }
 }
 
@@ -74,6 +99,8 @@ void keyReleased() {
     } else if (keyCode == DOWN) {
       cannon.decreaseBarrelAngle(false);
     }
+  } else if (key == 'm'){
+    cannon.setRapidFire(false); 
   }
 }
 
@@ -88,7 +115,12 @@ void drawHUD() {
   cam.beginHUD();
   fill(57, 255, 20);
   textSize(20);
-  text("Vertical Angle: "+ " " + cannon.getBarrel().getVerticalAngle() + " Horizontal Angle: " + cannon.getHorizontalAngle(), 10, 20);
+  text("Vertical Angle: "+ " " + Math.round(cannon.getBarrel().getVerticalAngle() * 100) / 100.0 + " (adjust with up/down)" +
+  "\nHorizontal Angle: " + Math.round(cannon.getHorizontalAngle() * 100) / 100.0 + " (adjust with left/right)" + 
+  "\nRotation Sensitivity: " + Math.round(cannon.getRotationSensitivity() * 100) / 100.0 + " (adjust with t/g)" + 
+  "\nProjectile Velocity: " +Math.round(cannon.getVelocity_metersPerSecond()) + " m/s (adjust with w/s)" + 
+  "\nBarrel Radius: " + Math.round(cannon.getBarrel().getRadius() * 100) / 100.0 + " cm (adjust with e/d)" +
+  "\nPress C to clear \nPress R to randomize projectile color \nPress M to rapid fire\nPress A to auto fire\nPress Space to Fire\nPress B to toggle bounce", 10, 20);
   miniMap.drawMiniMap();
   cam.endHUD();
 }

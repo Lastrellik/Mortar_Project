@@ -1,52 +1,56 @@
 abstract class StationaryObject {
 
-  private float verticalAngle = 0;
-  private float horizontalAngle = 90;
-  private float rotationalSensitivity = 1;
+  private double verticalAngle = 0;
+  private double horizontalAngle = 90;
+  private double rotationalSensitivity = 1;
   private boolean rotateClockwise = false, rotateCounterClockwise = false, rotateUp = false, rotateDown = false;
   private int posX, posY, posZ;
   int colorR = 255;
   int colorG = 255;
   int colorB = 255;
 
-  public void setRotationSensitivity(float sensitivity) {
-    if (sensitivity < 0) throw new IllegalArgumentException();
+  public void setRotationSensitivity(double sensitivity) {
+    if (sensitivity < 0) return;
     this.rotationalSensitivity = sensitivity;
   }
 
-  public float getRotationSensitivity() {
+  public double getRotationSensitivity() {
     return rotationalSensitivity;
   }
 
   private void increaseVerticalAngle() {
     if (verticalAngle < 90) verticalAngle += rotationalSensitivity;
+    if (verticalAngle > 90) verticalAngle = 90;
   }
 
   private void decreaseVerticalAngle() {
     if (verticalAngle > 0) verticalAngle -= rotationalSensitivity;
+    if (verticalAngle < 0) verticalAngle = 0;
   }
 
   private void increaseHorizontalAngle() {
     if (horizontalAngle < 180) horizontalAngle += rotationalSensitivity;
+    if (horizontalAngle > 180) horizontalAngle = 180;
   }
 
   private void decreaseHorizontalAngle() {
     if (horizontalAngle > 0) horizontalAngle -= rotationalSensitivity;
+    if (horizontalAngle < 0) horizontalAngle = 0;
   }
 
-  public void setVerticalAngle(float angle) {
+  public void setVerticalAngle(double angle) {
     this.verticalAngle = angle;
   }
 
-  public float getVerticalAngle() {
+  public double getVerticalAngle() {
     return verticalAngle;
   }
 
-  public void setHorizontalAngle(float angle) {
+  public void setHorizontalAngle(double angle) {
     this.horizontalAngle = angle;
   }
 
-  public float getHorizontalAngle() {
+  public double getHorizontalAngle() {
     return horizontalAngle;
   } 
 

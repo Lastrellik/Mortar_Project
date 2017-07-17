@@ -32,6 +32,10 @@ class Terrain {
     targets.add(target);
   }
   
+  public void clearTargets(){
+    targets.clear(); 
+  }
+  
   public PriorityQueue<Target> getTargets() {
     return targets;
   }

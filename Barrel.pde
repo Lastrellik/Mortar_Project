@@ -16,7 +16,7 @@ class Barrel extends StationaryObject {
     pushMatrix();
     int previousFillColor = g.fillColor;
     fill(colorR, colorG, colorB);
-    rotateY(radians(-getVerticalAngle() + 90));
+    rotateY(radians((float)-getVerticalAngle() + 90));
     float angle = 360 / sides, circleX, circleY;
     beginShape();
     for (int i = 0; i < sides; i++) {
@@ -52,7 +52,7 @@ class Barrel extends StationaryObject {
   }
 
   public void setRadius(float radius) {
-    if (radius <= 0) throw new IllegalArgumentException();
+    if (radius <= 0) return;
     this.radius = radius;
   }
 
