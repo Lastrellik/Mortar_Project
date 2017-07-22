@@ -14,7 +14,8 @@ int camLookAtY = -50;
 int camLookAtZ = -1 * floorLength / 2;
 
 void setup() {
-  size(1500, 845, P3D);
+  //size(1500, 845, P3D);
+  fullScreen(P3D);
   smooth();
   cam = new PeasyCam(this, camLookAtX, camLookAtY, camLookAtZ, 850);
   cam.setYawRotationMode();
@@ -135,6 +136,7 @@ void drawHUD() {
   "\nWind Magnitude: " + Math.round(terrain.getWindMagnitude() * 1000) / 1000.0 + " (adjust with u/j)" + 
   "\nRotation Sensitivity: " + Math.round(cannon.getRotationSensitivity() * 100) / 100.0 + " (adjust with t/g)" + 
   "\nBarrel Radius: " + Math.round(cannon.getBarrel().getRadius() * 100) / 100.0 + " cm (adjust with e/d)" +
+  "\nFrameRate: " + Math.round(frameRate) +
   "\nPress C to clear \nPress R to randomize projectile color \nPress M to rapid fire\nPress A to auto fire\nPress Space to Fire\nPress B to toggle bounce", 10, 20);
   miniMap.drawMiniMap();
   cam.endHUD();

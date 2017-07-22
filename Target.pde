@@ -2,7 +2,10 @@ class Target implements Comparable<Target> {
   private int posX, posY, posZ, size = 10;
   private double distanceToCannon = 0;
   private MiniMapTarget miniMapTarget;
-
+  private Explosion explosion;
+  private boolean isHit;
+  private int framesSinceDestruction = 0;
+  
   public Target(int posX, int posY) {
     this(posX, posY, 0);
   }
@@ -11,6 +14,11 @@ class Target implements Comparable<Target> {
     this.posX = posX;
     this.posY = posY;
     this.posZ = posZ;
+  }
+  
+  public void destroy(){
+    isHit = true;
+    explosion = new Explosion(100);
   }
 
   public int getPosX() {
@@ -32,13 +40,20 @@ class Target implements Comparable<Target> {
   public int getSize() {
     return this.size;
   }
+  
+  public boolean isHit(){
+    return isHit; 
+  }
 
   public void drawTarget() {
     pushMatrix();
     fill(255, 0, 0);
     stroke(255);
     translate(posX, posY, size / 2.0);
-    box(size);
+    if(explosion != null){
+      explosion.explode();
+      framesSinceDestruction++;
+    } else box(size);
     noStroke();
     popMatrix();
   }
@@ -50,6 +65,10 @@ class Target implements Comparable<Target> {
   
   public double getDistanceToCannon(){
     return distanceToCannon; 
+  }
+  
+  public int getFramesSinceDestruction(){
+    return framesSinceDestruction; 
   }
   
   public void setMiniMapTarget(MiniMapTarget target){

@@ -12,6 +12,7 @@ class Cannon extends StationaryObject {
   private int targetIterator = 0;
   private boolean rapidFire = false;
   private boolean bounce = false;
+  private Queue<Target> hitTargets = new LinkedList<Target>();
   
   public Cannon() {
     projectiles = new ArrayList<Projectile>();
@@ -46,13 +47,15 @@ class Cannon extends StationaryObject {
   }
 
   private void drawProjectiles() {
-    Queue<Target> hitTargets = new LinkedList<Target>();
     for (Projectile p : projectiles) {
       p.updateProjectile();
       p.drawProjectile();
-      for(Target t : terrain.getTargets()) if(t.containsProjectile(p)) hitTargets.add(t);
+      for(Target t : terrain.getTargets()) if(t.containsProjectile(p) && !t.isHit()) hitTargets.add(t);
     }
-    for(Target t : hitTargets) terrain.getTargets().remove(t);
+    for(Target t : hitTargets) {
+      if(!t.isHit()) t.destroy();
+      if(t.getFramesSinceDestruction() >= 150) terrain.getTargets().remove(t);
+    }
   }
 
   public void fire() {
