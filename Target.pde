@@ -61,10 +61,10 @@ class Target implements Comparable<Target> {
   }
   
   public boolean containsProjectile(Projectile projectile){
-    float leftSide = posX - size/2.0;
-    float rightSide = posX + size/2.0;
-    float frontSide = posY - size/2.0;
-    float backSide = posY + size/2.0;
+    float leftSide = posX - (size/2.0 + projectile.getRadius());
+    float rightSide = posX + (size/2.0 + projectile.getRadius());
+    float frontSide = posY - (size/2.0 + projectile.getRadius());
+    float backSide = posY + (size/2.0 + projectile.getRadius());
      return !(projectile.getPosZ() > size || projectile.getPosX() < leftSide || projectile.getPosX() > rightSide || projectile.getPosY() < frontSide || projectile.getPosY() > backSide); 
   }
   
