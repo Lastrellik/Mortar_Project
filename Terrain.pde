@@ -19,7 +19,7 @@ class Terrain {
 
   public void drawTerrain() {
     int currentFill = g.fillColor;
-    fill(51);
+    fill(175);
     noStroke();
     rect(posX, posY, width, length);
     if(rotateClockwise) setWindDirectionInDegrees(windDirectionInDegrees - rotationSensitivity);

@@ -2,6 +2,7 @@ class Particle {
   private float radius;
   private PVector position;
   private PVector velocity;
+  private int projectileSpeed = 10;
   private final PVector GRAVITY = new PVector(0, 0, -.27222222222);
   private int colorR, colorG, colorB;
 
@@ -13,7 +14,7 @@ class Particle {
     colorR = (int)Math.round(Math.random() * 255);
     colorG = (int)Math.round(Math.random() * 255);
     colorB = (int)Math.round(Math.random() * 255);
-    velocity.mult(10);
+    velocity.mult(projectileSpeed);
   }
 
   public void setVelocity(PVector velocity) {
@@ -23,6 +24,12 @@ class Particle {
   public void setMagnitude(float magnitude) {
     velocity.normalize();
     velocity.mult(magnitude);
+  }
+  
+  public void setProjectileSpeed(int projectileSpeed){
+    this.projectileSpeed = projectileSpeed;
+    velocity.normalize();
+    velocity.mult(projectileSpeed);
   }
 
   public void update() {

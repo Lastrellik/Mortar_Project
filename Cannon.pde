@@ -16,6 +16,7 @@ class Cannon extends StationaryObject {
   
   public Cannon() {
     projectiles = new ArrayList<Projectile>();
+    barrel.setColor(255, 255, 255);
   }
 
   public Cannon (Barrel barrel, Base base) {

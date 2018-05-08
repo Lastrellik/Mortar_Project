@@ -5,6 +5,8 @@ class Target implements Comparable<Target> {
   private Explosion explosion;
   private boolean isHit;
   private int framesSinceDestruction = 0;
+  private int explosionSpeed = 10;
+  private int numOfExplosionParticles = 100;
   
   public Target(int posX, int posY) {
     this(posX, posY, 0);
@@ -18,7 +20,7 @@ class Target implements Comparable<Target> {
   
   public void destroy(){
     isHit = true;
-    explosion = new Explosion(100);
+    explosion = new Explosion(numOfExplosionParticles, explosionSpeed);
   }
 
   public int getPosX() {
@@ -77,6 +79,10 @@ class Target implements Comparable<Target> {
   
   public MiniMapTarget getMiniMapTarget(){
     return this.miniMapTarget; 
+  }
+  
+  public void setExplosionSpeed(int explosionSpeed){
+    this.explosionSpeed = explosionSpeed;
   }
   
   public boolean containsProjectile(Projectile projectile){

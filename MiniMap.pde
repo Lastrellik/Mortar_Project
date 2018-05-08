@@ -25,7 +25,7 @@ class MiniMap {
   private void drawPoints() {
     if(terrain.getTargets() == null) return;
     for (Target t : terrain.getTargets()) {
-      t.getMiniMapTarget().drawMiniMapTarget();
+      if(!t.isHit()) t.getMiniMapTarget().drawMiniMapTarget();
     }
   }
 

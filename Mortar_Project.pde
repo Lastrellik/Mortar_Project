@@ -14,8 +14,8 @@ int camLookAtY = -50;
 int camLookAtZ = -1 * floorLength / 2;
 
 void setup() {
-  //size(1500, 845, P3D);
-  fullScreen(P3D);
+  size(1500, 845, P3D);
+  //fullScreen(P3D);
   smooth();
   cam = new PeasyCam(this, camLookAtX, camLookAtY, camLookAtZ, 850);
   cam.setYawRotationMode();
@@ -24,7 +24,7 @@ void setup() {
   terrain.setWindDirectionInDegrees(180);
   cannon.setBaseColor(182, 155, 76);
   cannon.setBarrelColor(255, 255, 255);
-  cannon.setProjectileColor(70, 102, 255);
+  cannon.setProjectileColor(0, 255, 0);
   cannon.setVelocity_metersPerSecond(projectileVelocity);
   cannon.getBarrel().setRadius(2);
   cannon.getBarrel().setRotationSensitivity(.5);
@@ -34,7 +34,8 @@ void setup() {
 }
 
 void draw() {
-  background(0);
+  background(255);
+  cannon.setProjectileColor(0, 0, 0);
   setPerspective();
   cam.lookAt(camLookAtX, camLookAtY, camLookAtZ);
   cannon.drawCannon();
@@ -127,7 +128,7 @@ void mouseClicked() {
 
 void drawHUD() {
   cam.beginHUD();
-  fill(57, 255, 20);
+  fill(0);
   textSize(20);
   text("Vertical Angle: "+ " " + Math.round(cannon.getBarrel().getVerticalAngle() * 100) / 100.0 + " (adjust with up/down)" +
   "\nHorizontal Angle: " + Math.round(cannon.getHorizontalAngle() * 100) / 100.0 + " (adjust with left/right)" + 
